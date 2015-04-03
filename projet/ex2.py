@@ -1,5 +1,8 @@
 #!/usr/bin/env python
  
+### POUR EXECUTER LE FICHIER DANS NOTEPAD++ : 	C:\Python34\python34.exe ex2.py
+### POUR EXECUTER EN LIGNES DE COMMANDES : 		python ex2.py
+ 
 import re
  
 # Le chemin vers le dossier contenant les fichiers de la Cranfield collection.
