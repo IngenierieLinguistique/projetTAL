@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-### POUR EXECUTER LE FICHIER DANS NOTEPAD++ : 	C:\Python34\python34.exe ex1.py
+### POUR EXECUTER LE FICHIER DANS NOTEPAD++ : 	C:\Python34\python.exe ex1.py
 ### POUR EXECUTER EN LIGNES DE COMMANDES : 		python ex1.py
  
 import re

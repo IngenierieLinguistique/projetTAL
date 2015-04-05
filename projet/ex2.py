@@ -1,7 +1,12 @@
 #!/usr/bin/env python
  
-### POUR EXECUTER LE FICHIER DANS NOTEPAD++ : 	C:\Python34\python34.exe ex2.py
+### POUR EXECUTER LE FICHIER DANS NOTEPAD++ : 	C:\Python34\python.exe ex2.py
 ### POUR EXECUTER EN LIGNES DE COMMANDES : 		python ex2.py
+
+### PENSER A FAIRE UN : 				import ex1
+### PENSER A FAIRE UN :					import tokenize
+### PENSER A FAIRE UN :					from ex1 import tokenize
+### TESTER EN LANCANT LA FONCTION :		tokenize(docs[1])
  
 import re
  
