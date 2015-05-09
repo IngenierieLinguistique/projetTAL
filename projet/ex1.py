@@ -346,9 +346,9 @@ quality = SequenceMatcher(None, official, our_try).ratio()
 # On fait un diff entre la version officielle et la notre et on le montre
 # sur la sortie.
 # PROCHAINS HASHTAGS/DIESES (#) A ENLEVER POUR REAFFICHER LA SORTIE
-print_lines(unified_diff(official, our_try,\
-	fromfile='offical', tofile='our_try',\
-	lineterm='')) 
+#print_lines(unified_diff(official, our_try,\
+	#fromfile='offical', tofile='our_try',\
+	#lineterm='')) 
 
 # On affiche le score
 print("Score: " + str(quality))

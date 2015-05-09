@@ -2,15 +2,11 @@
  
 ### POUR EXECUTER LE FICHIER DANS NOTEPAD++ : 	        C:\Python34\python.exe ex2.py
 ### POUR EXECUTER EN LIGNES DE COMMANDES : 		python ex2.py
-
-### PENSER A FAIRE UN : 				import ex1
-### PENSER A FAIRE UN :					import tokenize
-### PENSER A FAIRE UN :					from ex1 import tokenize
-### TESTER EN LANCANT LA FONCTION :		        tokenize(docs[1])
  
 import re
+import operator
 
-# ajouté
+# Ajout
 from ex1 import tokenize
  
 # Le chemin vers le dossier contenant les fichiers de la Cranfield collection.
@@ -50,18 +46,8 @@ def read_relevance():
 # laquelle d est un docID d'un document qui lui est pertinent.
 relevance = read_relevance()
 
- 
-# NOUVELLE FONCTION 1
+# FONCTION 1
 # frequencies(["ab","bc","ab"]) --> { "ab" : 2, "bc" : 1 }
-#def frequencies(toks):
-    #freqs = {}
-    #for tok in toks:
-        #if tok in freqs:
-            #freqs[tok] += 1
-        #else:
-            #freqs[tok] = 1
-    #return freqs
-
 def frequencies(toks):
     freqs = {}
     for tok in toks:
@@ -73,47 +59,8 @@ def frequencies(toks):
     #        freqs[tok] = (1,freqs[tok])
     return freqs
 
-# NOUVELLE FONCTION 2
-#def build_index(docs):
-#    """VOTRE CODE ICI
-#
-#       A partir de la collection des documents, construisez une structure
-#       des donnees qui vous permettra d'identifier des documents pertinents
-#       pour une question (e.g., l'index inversee qu'on a vu en classe).
-#    """
-#    index = {}
-#
-#    #for docID in docs:
-#        #freqs = frequencies(tokenize(docs[docID]))
-#        #...
-#
-#    return docs
-
-#def build_index(docs):
-#    """VOTRE CODE ICI
-#
-#       A partir de la collection des documents, construisez une structure
-#       des donnees qui vous permettra d'identifier des documents pertinents
-#       pour une question (e.g., l'index inversee qu'on a vu en classe).
-#    """
-#    index = {}
-#
-#    for docID in docs:
-#        freqs = frequencies(tokenize(docs[docID]))
-#        for tok in freqs: ###
-#            freqs[tok] = (docID,freqs[tok]) ###
-#        print(freqs) ###
-#        # ID DU DOCUMENT ACTUEL
-#        print(docID) ###
-#        # POUR EVITER DE BLOQUER LE PROCESSUS, METTRE UNE VALEUR FAIBLE (EXEMPLE : 'if docID > 10:')
-#        if docID > 10: ###
-#            break ###
-#    # ...
-#    return docs
-
-# Ce que retourne la fonction
-# build_index(...) --> { "mot1": [(1,6), (2,3), ...] "mot2": [(1,9), (2,0), ...]}
-
+# FONCTION 2
+# build_index(docs) --> { "slipstream": [(1,6), (16,3), ...], "configuration": [(1,1), ...], ... }
 def build_index(docs):
     """VOTRE CODE ICI
 
@@ -126,41 +73,77 @@ def build_index(docs):
     for docID in docs:
         freqs = frequencies(tokenize(docs[docID]))
         for tok in freqs: ###
-            freqs[tok] = (docID,freqs[tok]) ###
+            if tok in index.keys():
+                index[tok].append((docID, freqs[tok]));
+            else:
+            	index[tok] = []
+            
         print(freqs) ###
         # ID DU DOCUMENT ACTUEL
         print(docID) ###
         # POUR EVITER DE BLOQUER LE PROCESSUS, METTRE UNE VALEUR FAIBLE (EXEMPLE : 'if docID > 10:')
-        if docID > 10: ###
+        if docID > 4: ###
             break ###
     # ...
-    return docs
+    print(index)
+  
+    return index
  
+# FONCTION 3
+# rank_docs(...) --> {367,45,1352,27,1149,897,12,1400} or [367,45,1352,27,1149,897,12,1400] ??
+# Add comment sign at the beginning of the line where there is "DEBUG PRINTING" comment to avoid useless printing
 def rank_docs(index, query):
+    rank = {}
+	
     """VOTRE CODE ICI
 
-       Retournez la serie des docIDs ordonner par leur pertinence vis-a-vis
+       Retournez la serie des docIDs ordonnes par leur pertinence vis-a-vis
        la question 'query'.
     """
-    return index.keys()
- 
- 
+	
+    for i in range(1, 1401):
+        rank[i] = 0
+
+    for mot in tokenize(query):
+        
+        if mot in index.keys():
+            for item in index[mot]:
+                rank[item[0]] = item[1]
+
+    print("Beginning of Rank")      ### DEBUG PRINTING
+    print(rank)
+    print("End of Rank")            ### DEBUG PRINTING
+    sort = sorted(rank.items(), key=operator.itemgetter(1), reverse=True)
+    print("Beginning of Sort")      ### DEBUG PRINTING
+    print(sort)
+    print("End of Sorted")          ### DEBUG PRINTING
+    dico = dict(sort)
+    print("Beginning of Dico")      ### DEBUG PRINTING
+    print(dico)
+    print("End of Dico")            ### DEBUG PRINTING
+    liste = list(dico.keys())
+    print("Beginning of Liste")     ### DEBUG PRINTING
+    print(liste)
+    print("End of Liste")           ### DEBUG PRINTING
+    print(type(liste))
+    
+    return liste
  
 def average_precision(qid, ranking):
+    print("QUERY ID (qid) : " + str(qid))           ### DEBUG PRINTING
     relevant = 0
     total = 0
     precisions = []
     
     for did in ranking:
+        print("DOCUMENT ID (did) : " + str(did))    ### DEBUG PRINTING
         total += 1
         if (qid, did) in relevance:
             relevant += 1
             precisions.append(relevant / total)
  
     return sum(precisions) / len(precisions)
- 
-       
- 
+
 def mean_average_precision():
     index = build_index(docs)
  
@@ -170,16 +153,12 @@ def mean_average_precision():
         assert len(set(ranking)) == len(ranking), "Duplicates in document ranking."
         assert len(ranking) == len(docs), "Not enough (or too many) documents in ranking."
         aps.append(average_precision(qid, ranking))
- 
+        break
     return sum(aps) / len(aps)
-
-# ajouté
-#tokenize(docs[1])
  
 # Imprime le MAP de l'approche implemente
 print("Mean average precision: " + str(mean_average_precision()))
 
-# NOTES
-# liste = { "cle1": "valeur1", "cle2": "valeur2" }
-# liste = [2,5]
-# liste = (2,5)
+# SCORE INITIAL :   Mean average precision: 0.011772548860990937
+# SCORE ACTUEL :    Mean average precision: 0.12316653495319264
+
